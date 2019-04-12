@@ -20,7 +20,7 @@ client.on('presenceUpdate', (og, nm) => {
     .setTitle(`${osuname} (${nm.user.tag}) is ${game.state.toLowerCase()}`)
     .setURL(`https://acrylicstyle.xyz/osu/spectate/${encodeURI(osuname)}`)
     .addField('Beatmap URL', `https://osu.ppy.sh/beatmapsets?q=${encodeURI(beatmap)}&s=7`)
-    .addField('User Profile', `https://osu.ppy.sh/u/${osuname}`)
+    .addField('User Profile', `https://osu.ppy.sh/u/${encodeURI(osuname)}`)
     .addField('Artist', artist)
     .addField('Beatmap Name', name)
     .addField('Difficulty Name', difficulty)
