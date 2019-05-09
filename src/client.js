@@ -1,4 +1,4 @@
-const logger = require('./util/logger').getLogger('client', 'purple')
+const logger = require('logger.js').LoggerFactory.getLogger('client', 'purple')
 logger.info('Initializing')
 const config = require('./config.json')
 const app = require('./appconfig')
@@ -7,6 +7,36 @@ const client = new Discord.Client();
 
 client.on('ready', () => {
   logger.info(app.name + ' is ready!')
+})
+
+client.on('guildMemberAdd', member => {
+  if (member.user.bot || member.guild.verified || member.guild.verificationLevel !== 3) return
+  const main = member.guild.channels.filter(c => c.name.includes('メイン') || c.name.includes('main'))
+  const channel = (!main.size || main.first()) || member.guild.systemChannel
+  client.setTimeout(() => {
+    channel.send(`**${member.user.tag} has joined!** Say hi!`)
+  }, 1000 * 60 * 10)
+})
+
+client.on('guildMemberRemove', member => {
+  if (member.user.bot || member.guild.verified) return
+  const main = member.guild.channels.filter(c => c.name.includes('メイン') || c.name.includes('main'))
+  const channel = (!main.size || main.first()) || member.guild.systemChannel
+  channel.send(`**${member.user.tag} has left.** Say goodbye!`)
+})
+
+client.on('guildBanAdd', (guild, user) => {
+  if (user.bot || guild.verified) return
+  const main = guild.channels.filter(c => c.name.includes('メイン') || c.name.includes('main'))
+  const channel = (!main.size || main.first()) || guild.systemChannel
+  channel.send(`**${user.tag} got banned.** Say goodbye!`)
+})
+
+client.on('guildBanRemove', (guild, user) => {
+  if (user.bot || guild.verified) return
+  const main = guild.channels.filter(c => c.name.includes('メイン') || c.name.includes('main'))
+  const channel = (!main.size || main.first()) || guild.systemChannel
+  channel.send(`**${user.tag} is now unbanned!** Say yay!`)
 })
 
 client.on('presenceUpdate', (og, nm) => {
@@ -26,7 +56,7 @@ client.on('presenceUpdate', (og, nm) => {
     .addField('Difficulty Name', difficulty)
     .addField('Current player rank', rank)
     .setColor([0,255,0])
-  if (game.state === 'Spectating') {
+  if (game.state.toLowerCase().includes('spectating')) {
     !nm.guild.channels.find(c => c.name === 'now-spectating') || nm.guild.channels.find(c => c.name === 'now-spectating').send(embed)
   } else {
     !nm.guild.channels.find(c => c.name === 'now-playing') || nm.guild.channels.find(c => c.name === 'now-playing').send(embed)
