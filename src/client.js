@@ -9,6 +9,7 @@ const client = new Discord.Client();
 const prefix = 'o!'
 
 client.on('ready', () => {
+  client.user.setActivity(`${prefix}help`)
   logger.info(app.name + ' is ready!')
 })
 
