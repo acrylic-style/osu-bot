@@ -14,7 +14,7 @@ client.on('ready', () => {
 
 client.on('message', async msg => {
   if (msg.content.startsWith(prefix)) {
-    logger.info(`${msg.author.tag} issued command: ${msg.command}`)
+    logger.info(`${msg.author.tag} issued command: ${msg.content}`)
     await dispatcher(msg, {}, prefix, ['346957854445404160', '575673035743559701'])
   }
 })
