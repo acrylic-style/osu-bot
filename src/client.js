@@ -1,12 +1,22 @@
 const logger = require('logger.js').LoggerFactory.getLogger('client', 'purple')
 logger.info('Initializing')
+require('bot-framework/commands')
+const dispatcher = require('bot-framework/dispatcher')
 const config = require('./config.json')
 const app = require('./appconfig')
 const Discord = require('discord.js')
 const client = new Discord.Client();
+const prefix = 'o!'
 
 client.on('ready', () => {
   logger.info(app.name + ' is ready!')
+})
+
+client.on('message', async msg => {
+  if (msg.content.startsWith(prefix)) {
+    logger.info(`${msg.author.tag} issued command: ${msg.command}`)
+    await dispatcher(msg, {}, prefix, ['346957854445404160', '575673035743559701'])
+  }
 })
 
 client.on('guildMemberAdd', member => {
