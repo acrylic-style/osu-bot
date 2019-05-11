@@ -4,6 +4,7 @@
     "chalk": "^2.4.2",
     "discord.js": "^11.4.2",
     "logger.js": "acrylic-style/logger.js",
-    "moment": "^2.24.0"
+    "moment": "^2.24.0",
+    "string-format": "^2.0.0"
   }
 }
