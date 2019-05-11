@@ -8,7 +8,7 @@ module.exports = class extends Command {
 
   async run(msg, lang, args, sendDeletable, prefix) {
     if (args[1]) {
-      const commands = require('bot-framework/commands')
+      const { commands } = require('bot-framework/commands')
       const command = commands[args[1]]
       if (!command) return msg.channel.send(lang.no_command)
       const callback = p => {
