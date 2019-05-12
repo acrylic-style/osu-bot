@@ -31,8 +31,9 @@ module.exports = class extends Command {
     }
     const embed = new Discord.RichEmbed()
       .setTitle('List of commands')
-      .addField('help', 'You\'re already viewing this text. This menu.')
-      .addField('eval', 'eval command or evil command.')
+      .addField('help', lang['commands']['help'])
+      .addField('eval', lang['commands']['eval'])
+      .addField('nsfw', lang['commands']['nsfw'])
       .addField('Note!', `\`${prefix}help [Command]\` for more help!`)
       .setColor([0,255,0])
     sendDeletable(embed)
