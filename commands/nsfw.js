@@ -7,8 +7,12 @@ module.exports = class extends Command {
   }
 
   async run(msg) {
+    const removeOrAddRole = async (member, role) => {
+      if (member.roles.has(role.id)) return await msg.member.removeRole(role)
+      msg.member.addRole(role)
+    }
     if (!msg.guild.roles.find(r => r.name === '🔑')) return msg.react(x.char)
-    await msg.member.addRole(msg.guild.roles.find(r => r.name === '🔑'))
+    await removeOrAddRole(msg.member, msg.guild.roles.find(r => r.name === '🔑'))
     msg.react(ok_hand.char)
   }
 }
