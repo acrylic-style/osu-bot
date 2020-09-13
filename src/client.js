@@ -21,7 +21,6 @@ client.on('message', async msg => {
 })
 
 client.on('presenceUpdate', (og, nm) => {
-  console.log(nm)
   if (!nm.activities.filter(a => a.type === 'PLAYING').length === 0) return
   const game = nm.activities.filter(a => a.type === 'PLAYING')[0]
   if (game.applicationID !== '367827983903490050') return // <- return if application id isn't osu client
