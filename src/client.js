@@ -20,44 +20,15 @@ client.on('message', async msg => {
   }
 })
 
-client.on('guildMemberAdd', member => {
-  if (member.user.bot || member.guild.verified || member.guild.verificationLevel !== 3) return
-  const main = member.guild.channels.filter(c => c.name.includes('メイン') || c.name.includes('main'))
-  const channel = (!main.size || main.first()) || member.guild.systemChannel
-  client.setTimeout(() => {
-    channel.send(`**${member.user.tag} has joined!** Say hi!`)
-  }, 1000 * 60 * 10)
-})
-
-client.on('guildMemberRemove', member => {
-  if (member.user.bot || member.guild.verified) return
-  const main = member.guild.channels.filter(c => c.name.includes('メイン') || c.name.includes('main'))
-  const channel = (!main.size || main.first()) || member.guild.systemChannel
-  channel.send(`**${member.user.tag} has left.** Say goodbye!`)
-})
-
-client.on('guildBanAdd', (guild, user) => {
-  if (user.bot || guild.verified) return
-  const main = guild.channels.filter(c => c.name.includes('メイン') || c.name.includes('main'))
-  const channel = (!main.size || main.first()) || guild.systemChannel
-  channel.send(`**${user.tag} got banned.** Say goodbye!`)
-})
-
-client.on('guildBanRemove', (guild, user) => {
-  if (user.bot || guild.verified) return
-  const main = guild.channels.filter(c => c.name.includes('メイン') || c.name.includes('main'))
-  const channel = (!main.size || main.first()) || guild.systemChannel
-  channel.send(`**${user.tag} is now unbanned!** Say yay!`)
-})
-
 client.on('presenceUpdate', (og, nm) => {
-  if (!nm.presence.game) return
-  const game = nm.presence.game
+  console.log(nm)
+  if (!nm.activities.filter(a => a.type === 'PLAYING').length === 0) return
+  const game = nm.activities.filter(a => a.type === 'PLAYING')[0]
   if (game.applicationID !== '367827983903490050') return // <- return if application id isn't osu client
   if (!/^(.*?) - (.*) \[(.*)\]$/g.test(game.details)) return
   const [ beatmap, artist, name, difficulty ] = /^(.*?) - (.*) \[(.*)\]$/g.exec(game.details) // (Artist) - (Beatmap) [(Difficulty)]
   const [ namerank, osuname, rank ] = /(.*?) \(rank (.*)\)/.exec(game.assets.largeText) // (osu Username) - \(rank (#Rank)\)
-  const embed = new Discord.RichEmbed()
+  const embed = new Discord.MessageEmbed()
     .setTitle(`${osuname} (${nm.user.tag}) is ${game.state.toLowerCase()}`)
     .setURL(`https://acrylicstyle.xyz/osu/spectate/${encodeURI(osuname)}`)
     .addField('Beatmap URL', `https://osu.ppy.sh/beatmapsets?q=${encodeURI(beatmap)}&s=7`)
@@ -68,9 +39,9 @@ client.on('presenceUpdate', (og, nm) => {
     .addField('Current player rank', rank)
     .setColor([0,255,0])
   if (game.state.toLowerCase().includes('spectating')) {
-    !nm.guild.channels.find(c => c.name === 'now-spectating') || nm.guild.channels.find(c => c.name === 'now-spectating').send(embed)
+    !nm.guild.channels.cache.find(c => c.name === 'now-spectating') || nm.guild.channels.cache.find(c => c.name === 'now-spectating').send(embed)
   } else {
-    !nm.guild.channels.find(c => c.name === 'now-playing') || nm.guild.channels.find(c => c.name === 'now-playing').send(embed)
+    !nm.guild.channels.cache.find(c => c.name === 'now-playing') || nm.guild.channels.cache.find(c => c.name === 'now-playing').send(embed)
   }
 })
 
